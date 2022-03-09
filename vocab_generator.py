@@ -20,7 +20,8 @@ def write_vocab(filename, vocab_list):
 print('Start')
 pre_config = {
     pre_opt.SEGMENTER_KEY: pre_opt.SpacySegmenter(),
-    pre_opt.TOKENIZER_KEY: pre_opt.SpacyTokenizer()
+    # pre_opt.TOKENIZER_KEY: pre_opt.SpacyTokenizer()
+    pre_opt.TOKENIZER_KEY: pre_opt.NLTKTokenizer()
 }
 parser = SpacyParser()
 input_path = "data/cdr_data"

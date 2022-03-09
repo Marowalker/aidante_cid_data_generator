@@ -49,11 +49,13 @@ def get_candidate(sent, entities):
 print('Start')
 pre_config = {
     pre_opt.SEGMENTER_KEY: pre_opt.SpacySegmenter(),
-    pre_opt.TOKENIZER_KEY: pre_opt.SpacyTokenizer()
+    # pre_opt.TOKENIZER_KEY: pre_opt.SpacyTokenizer()
+    # pre_opt.TOKENIZER_KEY: pre_opt.NLTKTokenizer()
+    pre_opt.TOKENIZER_KEY: pre_opt.BERTTokenizer()
 }
 parser = SpacyParser()
 spd_finder = Finder()
-input_path = "data/cdr"
+input_path = "data/cdr_data"
 output_path = "data/sdp"
 
 datasets = ['train', 'dev', 'test']
@@ -75,8 +77,6 @@ for dataset in datasets:
     # Generate data
     dict_nern = defaultdict(list)
     data_tree = defaultdict()
-
-    # generate data for vocab files:
 
     for doc in documents:
         raw_entity = raw_entities[doc.id]
@@ -101,17 +101,27 @@ for dataset in datasets:
         dep_tree = process_one(doc)
         data_tree[doc.id] = dep_tree
 
+    with open('data/sdp/list_abstracts.' + dataset + '.txt') as f:
+        abstracts = [l.strip() for l in f.readlines()]
+        new_documents = []
+        for a in abstracts:
+            for doc in documents:
+                if doc.id == a:
+                    new_documents.append(doc)
+        f.close()
+
     # with open(os.path.join(output_path, "sdp_data_acentors_graph." + dataset + ".txt"), "w") as f:
-    with open(os.path.join(output_path, "sdp_data_siblings." + dataset + ".txt"), "w") as f:
-        f2 = open(os.path.join(output_path, "sdp_triple." + dataset + ".txt"), "w")
-        for doc in shuffle(sorted(documents, key=lambda x: x.id)):
+    with open(os.path.join(output_path, "sdp_data_acentors_bert." + dataset + ".txt"), "w") as f:
+        # f2 = open(os.path.join(output_path, "sdp_triple." + dataset + ".txt"), "w")
+        # for doc in shuffle(sorted(documents, key=lambda x: x.id)):
+        for doc in new_documents:
             sdp_data = defaultdict(dict)
             deep_tree_doc = data_tree[doc.id]
             relation = raw_relations[doc.id]
             f.write(doc.id)
             f.write("\n")
-            f2.write(doc.id)
-            f2.write('\n')
+            # f2.write(doc.id)
+            # f2.write('\n')
             for sent, deptree in zip(doc.sentences, deep_tree_doc):
                 # adj, adj2, X = spd_finder.get_graph_feature(sent, deptree)
                 # graph_doc[doc.id].append((adj, adj2, X))
@@ -173,10 +183,10 @@ for dataset in datasets:
                         # sdp, sent_path, adj, adj2, X = sdp_data[pair_key]['CID'][k]
                         sdp, sent_path = sdp_data[pair_key]['CID'][k]
                         f.write('{} {} {}\n'.format(pair_key, 'CID', sdp))
-                        f2.write('{}\t{}\t{}\n'.format(c, d, str(2)))
+                        # f2.write('{}\t{}\t{}\n'.format(c, d, str(2)))
 
                 if 'NONE' in sdp_data[pair_key]:
                     for k in range(len(sdp_data[pair_key]['NONE'])):
                         sdp, sent_path = sdp_data[pair_key]['NONE'][k]
                         f.write('{} {} {}\n'.format(pair_key, 'NONE', sdp))
-                        f2.write('{}\t{}\t{}\n'.format(c, d, str(3)))
+                        # f2.write('{}\t{}\t{}\n'.format(c, d, str(3)))

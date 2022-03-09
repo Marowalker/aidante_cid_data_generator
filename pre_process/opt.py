@@ -3,6 +3,8 @@ from pre_process.segmenters.spacy import SpacySegmenter
 
 from pre_process.tokenizers.simple import SimpleTokenizer
 from pre_process.tokenizers.spacy import SpacyTokenizer
+from pre_process.tokenizers.nltk_tokenizer import NLTKTokenizer
+from pre_process.tokenizers.bert import CustomBertTokenizer
 
 from pre_process.options.normalizers import NumericNormalizer
 from pre_process.options.snowball_stemmer import SnowballStemmer
@@ -16,6 +18,8 @@ SpacySegmenter = SpacySegmenter
 # Options for tokenizers
 SimpleTokenizer = SimpleTokenizer
 SpacyTokenizer = SpacyTokenizer
+NLTKTokenizer = NLTKTokenizer
+BERTTokenizer = CustomBertTokenizer
 
 # Options for optional processes
 NumericNormalizer = NumericNormalizer

@@ -13,8 +13,8 @@ class Spacy:
     def load_spacy():
         t = Timer()
         t.start('Load SpaCy')
-        # Spacy.nlp = sp.load('en_core_sci_scibert')
-        Spacy.nlp = sp.load('en_core_web_lg')
+        Spacy.nlp = sp.load('en_core_sci_scibert')
+        # Spacy.nlp = sp.load('en_core_web_lg')
         t.stop()
         Spacy.nlp.tokenizer.add_special_case(u'+/-', [{ORTH: u'+/-'}])
         Spacy.nlp.tokenizer.add_special_case("mg.", [{ORTH: "mg."}])
